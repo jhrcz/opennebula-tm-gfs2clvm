@@ -40,6 +40,7 @@ DST_HOST=`arg_host $DST`
 if [ -z $SIZE ] ; then
 	SIZE=$($SSH $DST_HOST du --block-size=1G $SRC_PATH | awk '{print $1}')
 	SIZE=$(($SIZE + 1))
+	SIZE=${SIZE}G
 fi
 
 if [ -z $SIZE ] ; then
