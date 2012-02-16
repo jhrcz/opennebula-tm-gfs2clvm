@@ -35,9 +35,6 @@ SRC_HOST=`arg_host $SRC`
 
 VID=`get_vid $SRC_PATH`
 
-# fix using VG_NAME in subshell
-export VG_NAME
-
 log "Deleting remote LVs"
 LVS=$($SSH $SRC_HOST $SUDO $LVS --noheadings -o lv_name $VG_NAME | grep lv-one-$VID)
 for lv in $LVS
