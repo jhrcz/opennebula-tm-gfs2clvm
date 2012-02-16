@@ -26,6 +26,7 @@ else
 fi
 
 . $TMCOMMON
+MKSWAP=/sbin/mkswap
 
 DST_PATH=`arg_path $DST`
 DST_HOST=`arg_host $DST`
