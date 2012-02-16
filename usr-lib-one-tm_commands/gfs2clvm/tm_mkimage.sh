@@ -18,11 +18,14 @@
 
 if [ -z "${ONE_LOCATION}" ]; then
     TMCOMMON=/usr/lib/one/mads/tm_common.sh
+    LVMRC=/etc/one/tm_gfs2clvm/tm_gfs2clvmrc
 else
     TMCOMMON=$ONE_LOCATION/lib/mads/tm_common.sh
+    LVMRC=$ONE_LOCATION/etc/tm_gfs2clvm/tm_gfs2clvmrc
 fi
 
 . $TMCOMMON
+. $LVMRC
 
 SIZE=$1
 FSTYPE=$2
@@ -34,7 +37,14 @@ DST_DIR=`dirname $DST_PATH`
 
 MKFS_CMD=`mkfs_command $DST_PATH $FSTYPE`
 
-exec_and_log "$SSH $DST_HOST mkdir -p $DST_DIR"
-exec_and_log "$SSH $DST_HOST $DD if=/dev/zero of=$DST_PATH bs=1 count=1 seek=${SIZE}M"
+LV_NAME=`get_lv_name $DST_PATH`
+
+log "Creating LV $LV_NAME"
+exec_and_log "$SSH $DST_HOST $SUDO $LVCREATE -L$SIZE -n $LV_NAME $VG_NAME"
+exec_and_log "$SSH $DST_HOST ln -s /dev/$VG_NAME/$LV_NAME $DST_PATH"
+#exec_and_log "$SSH $DST_HOST chown oneadmin: $DST_PATH"
+
+log "Dumping Image"
+#exec_and_log "eval $SSH $DST_HOST $DD if=/dev/zero of=/dev/$VG_NAME/$LV_NAME bs=64k"
 exec_and_log "$SSH $DST_HOST $MKFS_CMD"
-exec_and_log "$SSH $DST_HOST chmod a+rw $DST_PATH"
+
