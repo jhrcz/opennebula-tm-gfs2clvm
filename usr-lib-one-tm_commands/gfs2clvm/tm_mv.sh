@@ -21,10 +21,10 @@ DST=$2
 
 if [ -z "${ONE_LOCATION}" ]; then
     TMCOMMON=/usr/lib/one/mads/tm_common.sh
-    LVMRC=/etc/one/tm_lvm/tm_lvmrc
+    LVMRC=/etc/one/tm_gfs2clvm/tm_gfs2clvmrc
 else
     TMCOMMON=$ONE_LOCATION/lib/mads/tm_common.sh
-    LVMRC=$ONE_LOCATION/etc/tm_lvm/tm_lvmrc
+    LVMRC=$ONE_LOCATION/etc/tm_gfs2clvm/tm_gfs2clvmrc
 fi
 
 . $TMCOMMON
@@ -70,7 +70,7 @@ fi
 
 log "Moving $SRC_PATH"
 exec_and_log "$SSH $DST_HOST mkdir -p $DST_DIR"
-exec_and_log "$SCP -r $SRC $DST"
+exec_and_log "$SSH cp -r $SRC_PATH $DST_PATH"
 exec_and_log "$SSH $SRC_HOST rm -rf $SRC_PATH"
 
 if [ "$DST_HOST" != "$HOSTNAME" ]; then

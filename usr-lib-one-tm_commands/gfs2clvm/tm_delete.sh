@@ -21,10 +21,10 @@ DST=$2
 
 if [ -z "${ONE_LOCATION}" ]; then
     TMCOMMON=/usr/lib/one/mads/tm_common.sh
-    LVMRC=/etc/one/tm_lvm/tm_lvmrc
+    LVMRC=/etc/one/tm_gfs2clvm/tm_gfs2clvmrc
 else
     TMCOMMON=$ONE_LOCATION/lib/mads/tm_common.sh
-    LVMRC=$ONE_LOCATION/etc/tm_lvm/tm_lvmrc
+    LVMRC=$ONE_LOCATION/etc/tm_gfs2clvm/tm_gfs2clvmrc
 fi
 
 . $TMCOMMON

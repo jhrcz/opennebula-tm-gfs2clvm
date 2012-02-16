@@ -34,6 +34,7 @@ fi
 
 . $TMCOMMON
 
+DST_HOST=`arg_host $DST`
 
 DST_PATH=`arg_path $DST`
 DST_DIR=`dirname $DST_PATH`
@@ -47,21 +48,23 @@ fi
 ISO_DIR="$TMP_DIR/isofiles"
 
 
-exec_and_log "mkdir -p $ISO_DIR"
+exec_and_log "$SSH $DST_HOST mkdir -p $ISO_DIR"
 
 for f in $SRC; do
     case $f in
     http://*)
-        exec_and_log "$WGET -P $ISO_DIR $f"
+        exec_and_log "$SSH $DST_HOST $WGET -P $ISO_DIR $f"
         ;;
 
     *)
-        exec_and_log "cp -R $f $ISO_DIR" \
+        [ -f "$f" ] && exec_and_log "$SCP $f $DST_HOST:$DST_DIR/../"
+        exec_and_log "$SSH $DST_HOST cp -R $f $ISO_DIR" \
             "Error copying $f to $ISO_DIR"
         ;;
     esac
 done
 
-exec_and_log "$MKISOFS -o $TMP_DIR/$DST_FILE -J -R $ISO_DIR"
-exec_and_log "$SCP $TMP_DIR/$DST_FILE $DST"
-exec_and_log "rm -rf $TMP_DIR"
+exec_and_log "$SSH $DST_HOST $MKISOFS -o $TMP_DIR/$DST_FILE -J -R $ISO_DIR"
+exec_and_log "$SSH $DST_HOST mkdir -p $DST"
+exec_and_log "$SSH $DST_HOST cp $TMP_DIR/$DST_FILE $DST_DIR"
+exec_and_log "$SSH $DST_HOST rm -rf $TMP_DIR"
