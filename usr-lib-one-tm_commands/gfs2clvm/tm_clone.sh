@@ -38,6 +38,11 @@ SRC_HOST=`arg_host $SRC`
 DST_HOST=`arg_host $DST`
 
 if [ -z $SIZE ] ; then
+	SIZE=$($SSH $DST_HOST du --block-size=1G $SRC_PATH | awk '{print $1}')
+	SIZE=$(($SIZE + 1))
+fi
+
+if [ -z $SIZE ] ; then
     SIZE=$DEFAULT_LV_SIZE
 fi
 
