@@ -64,13 +64,13 @@ if [ "$SRC_HOST" != "$HOSTNAME" ]; then
 
     [ "$?" != "0" ] && log_error "Error dumping LV to disk image"
 
-    log "Deleting remote LVs"
-    exec_and_log "$SSH $SRC_HOST $SUDO $LVREMOVE -f \$(echo $VG_NAME/\$($SUDO $LVS --noheadings $VG_NAME|$AWK '{print \$1}'|grep lv-one-$VID))"
+    #log "Deleting remote LVs"
+    #exec_and_log "$SSH $SRC_HOST $SUDO $LVREMOVE -f \$(echo $VG_NAME/\$($SUDO $LVS --noheadings $VG_NAME|$AWK '{print \$1}'|grep lv-one-$VID))"
 fi
 
 log "Moving $SRC_PATH"
-exec_and_log "$SSH $DST_HOST mkdir -p $DST_DIR"
-exec_and_log "$SSH cp -r $SRC_PATH $DST_PATH"
+exec_and_log "$SSH $SRC_HOST mkdir -p $DST_DIR"
+exec_and_log "$SSH $SRC_HOST cp -r $SRC_PATH $DST_PATH"
 exec_and_log "$SSH $SRC_HOST rm -rf $SRC_PATH"
 
 if [ "$DST_HOST" != "$HOSTNAME" ]; then
