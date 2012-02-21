@@ -50,7 +50,7 @@ Other configuration changes
 * reboot 		OK
 * stop 			FAIL (inherited from original drivers)
 * livemigrate 		OK
-* migrate 		FAIL (inherited from original drivers, stop is not working)
+* migrate 		OK
 
 * suspend 		OK
 * resume 		OK
