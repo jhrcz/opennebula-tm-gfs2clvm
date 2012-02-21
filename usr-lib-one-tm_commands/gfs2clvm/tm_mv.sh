@@ -49,7 +49,3 @@ if [ "$SRC_PATH" == "$DST_PATH" ]; then
     exit 0
 fi
 
-if [ "$DST_HOST" != "$HOSTNAME" ]; then
-    log_error "This TM does not support resuming."
-fi
-
