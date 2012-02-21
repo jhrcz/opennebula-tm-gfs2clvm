@@ -58,7 +58,7 @@ Other configuration changes
 * cancel 		OK
 * shutdown 		OK
 * delete 		OK
-* saveas + shutdown 	FAIL (storage is not available on the management node)
+* saveas + shutdown 	OK (custom remotes)
 
 Everything tested on EL6x (as of 2012-02-20, CentOS 6.2)
 
