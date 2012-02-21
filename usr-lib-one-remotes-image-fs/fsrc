@@ -63,12 +63,23 @@ EOF
 echo "$IMAGE_REPOSITORY_PATH/`echo $CANONICAL_MD5 | cut -d ' ' -f1`"
 }
 
+# arg1 path
+# arg2 path (change for gfs2clvm driver)
 function fs_du {
-	if [ -d "$1" ]; then
-		SIZE=`du -s "$1" | cut -f1`
+	# define SSHPREF
+	# if on remote host, then all its nonempty
+	# and calls the command via ssh
+	if [ -n "$2" ]; then
+	        SSHPREF="ssh $2"
+	else
+		SSHPREF=""
+	fi
+
+	if $SSHPREF test -d "$1"; then
+		SIZE=`$SSHPREF du -s "$1" | cut -f1`
 		error=$?
 	else
-		SIZE=`stat -c %s "$1"`
+		SIZE=`$SSHPREF stat -c %s "$1"`
 		error=$?
 	fi
 

@@ -82,6 +82,8 @@ else
 fi
 
 # ---------------- Get the size of the image ------------
-SIZE=`fs_du $DST`
+# if $src_host is defined, then this argument is used to call
+# commands in fs_du via ssh
+SIZE=`fs_du $DST $src_host`
 
 echo "$DST $SIZE"
