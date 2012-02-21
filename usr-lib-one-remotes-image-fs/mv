@@ -64,8 +64,8 @@ http://*)
        host_db_record=$( 'select * from vm_pool where oid = '"$ID"';' | sqlite3 /var/lib/one/one.db )
        log "host db recore: $host_db_record"
        # get the host IP where it was running before
-       src_host=${host_db_record##.*<HOSTNAME>}
-       src_host=${host_db_record##</HOSTNAME>.*}
+       src_host=${host_db_record##*<HOSTNAME>}
+       src_host=${host_db_record##</HOSTNAME>*}
        log "src hostname: $src_host"
        # check if the hostname is IP as it is used in our installation
        ( echo "$src_host" | grep -q "[^.]*\.[^.]*\.[^.]*\.[^.]*\." ) || echo "ERROR got bad hostname drom db"
