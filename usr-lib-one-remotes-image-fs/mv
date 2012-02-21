@@ -58,16 +58,19 @@ http://*)
          \( "`$READLINK -f $SRC`" = "`$READLINK -f $DST`" \) ] ; then
        log "Not moving files to image repo, they are the same"
     else
-       echo "=== date ===" >> /tmp/one-debug.txt
-       date >> /tmp/one-debug.txt
-       echo "=== src/dst ===" >> /tmp/one-debug.txt
-       echo "$SRC / $DST" >> /tmp/one-debug.txt
-       echo "=== hostname ===" >> /tmp/one-debug.txt
-       hostname >> /tmp/one-debug.txt
-       echo "=== set ===" >> /tmp/one-debug.txt
-       set >> /tmp/one-debug.txt
-
-       exec_and_log "ssh 178.238.35.102 mv -f $SRC $DST" "Could not move $SRC to $DST"
+       log "mv SRC: $SRC"
+       log "mv DST: $DST"
+       # the whole db reseult for machine is present in the db even if it is already in shutdown/done state
+       host_db_record=$( 'select * from vm_pool where oid = '"$ID"';' | sqlite3 /var/lib/one/one.db )
+       log "host db recore: $host_db_record"
+       # get the host IP where it was running before
+       src_host=${host_db_record##.*<HOSTNAME>}
+       src_host=${host_db_record##</HOSTNAME>.*}
+       log "src hostname: $src_host"
+       # check if the hostname is IP as it is used in our installation
+       ( echo "$src_host" | grep -q "[^.]*\.[^.]*\.[^.]*\.[^.]*\." ) || echo "ERROR got bad hostname drom db"
+       # using guessed node ip
+       exec_and_log "ssh $src_host mv -f $SRC $DST" "Could not move $SRC to $DST"
     fi
     ;;
 esac
