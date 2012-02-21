@@ -24,11 +24,23 @@ Other nice featurs
 
 Files are divided into subdirectories representing destination locations
 
-  * etc-one 					/etc/one/ 			(configuration)
-  * etc-sudoers-d 				/etc/sudoers.d/			(sudo rules)
-  * etc-udev-rules-d 				/etc/udev/rules.d/		(lvm lv ownership)
-  * usr-lib-one-tm_commands 			/usr/lib/one/tm_commands/	(tm driver)
-  * etc-polkit-1-localauthority-50-local.d 	/etc/polkit-1/localauthority/50-local.d/
+* etc-one 					/etc/one/ 			(configuration)
+* etc-sudoers-d 				/etc/sudoers.d/			(sudo rules)
+* etc-udev-rules-d 				/etc/udev/rules.d/		(lvm lv ownership)
+* usr-lib-one-tm_commands 			/usr/lib/one/tm_commands/	(tm driver)
+* etc-polkit-1-localauthority-50-local.d 	/etc/polkit-1/localauthority/50-local.d/
+
+Other configuration changes
+
+* disabled dynamic ownership
+
+    sed -i -e 's,^#dynamic_ownership = 1,dynamic_ownership = 0,' /etc/libvirt/qemu.conf
+
+* virtual machines running by oneadmin/oneadmin, not root or other user
+
+    sed -i -e 's,^#user = "root",user = "oneadmin",' /etc/libvirt/qemu.conf
+    sed -i -e 's,^#group = "root",group = "oneadmin",' /etc/libvirt/qemu.conf
+
 
 ## CURRENT STATE
 
