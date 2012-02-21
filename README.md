@@ -24,10 +24,11 @@ Other nice featurs
 
 Files are divided into subdirectories representing destination locations
 
-  * etc-one 			/etc/one/ 			(configuration)
-  * etc-sudoers-d 		/etc/sudoers.d/			(sudo rules)
-  * etc-udev-rules-d 		/etc/udev/rules.d/		(lvm lv ownership)
-  * usr-lib-one-tm_commands 	/usr/lib/one/tm_commands/	(tm driver)
+  * etc-one 					/etc/one/ 			(configuration)
+  * etc-sudoers-d 				/etc/sudoers.d/			(sudo rules)
+  * etc-udev-rules-d 				/etc/udev/rules.d/		(lvm lv ownership)
+  * usr-lib-one-tm_commands 			/usr/lib/one/tm_commands/	(tm driver)
+  * etc-polkit-1-localauthority-50-local.d 	/etc/polkit-1/localauthority/50-local.d/
 
 ## CURRENT STATE
 
