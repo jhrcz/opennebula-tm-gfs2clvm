@@ -48,11 +48,13 @@ Other configuration changes
 * resubmit 		OK
 
 * reboot 		OK
-* stop 			FAIL (inherited from original drivers)
+
 * livemigrate 		OK
-* migrate 		OK
 
 * suspend 		OK
+
+* migrate 		OK
+* stop 			OK
 * resume 		OK
 
 * cancel 		OK
