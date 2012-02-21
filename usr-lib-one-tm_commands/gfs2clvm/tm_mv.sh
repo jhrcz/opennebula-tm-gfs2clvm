@@ -49,29 +49,6 @@ if [ "$SRC_PATH" == "$DST_PATH" ]; then
     exit 0
 fi
 
-if [ "$SRC_HOST" != "$HOSTNAME" ]; then
-    log "Dumping LV to disk image"
-
-    echo "if [ -L "$SRC_PATH" ]; then
-        lv=\$(readlink $SRC_PATH)
-        rm $SRC_PATH
-        touch $SRC_PATH
-        $SUDO $DD if=\$lv of=$SRC_PATH bs=64k
-    else
-        exit 1
-    fi" | $SSH $SRC_HOST "$BASH -s"
-
-    [ "$?" != "0" ] && log_error "Error dumping LV to disk image"
-
-    #log "Deleting remote LVs"
-    #exec_and_log "$SSH $SRC_HOST $SUDO $LVREMOVE -f \$(echo $VG_NAME/\$($SUDO $LVS --noheadings $VG_NAME|$AWK '{print \$1}'|grep lv-one-$VID))"
-fi
-
-log "Moving $SRC_PATH"
-exec_and_log "$SSH $SRC_HOST mkdir -p $DST_DIR"
-exec_and_log "$SSH $SRC_HOST cp -r $SRC_PATH $DST_PATH"
-exec_and_log "$SSH $SRC_HOST rm -rf $SRC_PATH"
-
 if [ "$DST_HOST" != "$HOSTNAME" ]; then
     log_error "This TM does not support resuming."
 fi
