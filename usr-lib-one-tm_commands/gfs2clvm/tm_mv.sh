@@ -46,8 +46,12 @@ fi
 
 # Check that we are not stopping, migrating or resuming
 if echo `basename $SRC_PATH`|grep -vq '^disk'; then
-    log_error "This TM does not support stop, migrating or resuming."
-    exit 1
+    if [ "$SRC_PATH" == "$DST_PATH" ]; then
+        log "Will not move, source and destination are equal"
+        exit 0
+    fi
+    #log_error "This TM does not support stop, migrating or resuming."
+    #exit 1
 fi
 
 if [ "$SRC_HOST" != "$HOSTNAME" ]; then
