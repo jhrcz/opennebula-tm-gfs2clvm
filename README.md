@@ -64,6 +64,11 @@ Other configuration changes
 
 Everything tested on EL6x (as of 2012-02-20, CentOS 6.2)
 
+Some extra features, maybe not expected
+
+* copy of machine in SUSPENDED state
+  by using lvm://{{VMID}}/{{DISKID}} as source
+
 
 ## ABOUT OPENNEBULA
 
