@@ -94,8 +94,8 @@ lvm://*)
     # $SSH $DST_HOST $SUDO $LVCREATE
     exec_and_log "ssh $hostname sudo lvcreate -L 16384M -n lv-oneimg-${DST_BASENAME} ${VG_NAME}" \
         "Error creating LV ${VG_NAME}/lv-oneimg-${DST_BASENAME}"
-    exec_and_log "ssh $hostname dd if=${src_volume} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" \
-        "Error copying ${src_volume} to $DST_BASENAME"
+    exec_and_log "ssh $hostname dd if=/var/lib/one/${vmid}/images/disk.${diskid} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" \
+        "Error copying /var/lib/one/${vmid}/images/disk.${diskid} to $DST_BASENAME"
     ;;
 
 *)
