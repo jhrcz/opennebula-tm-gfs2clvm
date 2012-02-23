@@ -58,6 +58,11 @@ http://*)
          \( "`$READLINK -f $SRC`" = "`$READLINK -f $DST`" \) ] ; then
        log "Not moving files to image repo, they are the same"
     else
+
+       log "No moving needed already existing volume should be on hashed lvm"
+       exit 0
+
+
        log "mv SRC: $SRC"
        log "mv DST: $DST"
        # the whole db reseult for machine is present in the db even if it is already in shutdown/done state
