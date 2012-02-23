@@ -19,16 +19,24 @@
 SRC=$1
 DST=$2
 
+SRC_PATH=`arg_path $SRC`
+SRC_PATH_BASENAME=$( basename ${SRC_PATH} )
+
 if [ -z "${ONE_LOCATION}" ]; then
     TMCOMMON=/usr/lib/one/mads/tm_common.sh
     TM_COMMANDS_LOCATION=/usr/lib/one/tm_commands/ 
+    LVMRC=/etc/one/tm_gfs2clvm/tm_gfs2clvmrc
 else
     TMCOMMON=$ONE_LOCATION/lib/mads/tm_common.sh
     TM_COMMANDS_LOCATION=$ONE_LOCATION/lib/tm_commands/
+    LVMRC=$ONE_LOCATION/etc/tm_gfs2clvm/tm_gfs2clvmrc
 fi
 
 . $TMCOMMON
+. $LVMRC
 
 log "Link $SRC_PATH (non shared dir, will clone)"
 #exec_and_log "ln -s $SRC_PATH $DST_PATH"
-exec $TM_COMMANDS_LOCATION/ssh/tm_clone.sh $SRC $DST
+log "Link /dev/mapper/${VG_NAME}-lv--oneimg--${SRC_PATH_BASENAME} to $DST_PATH"
+exec_and_log "ln -s /dev/mapper/${VG_NAME}-lv--oneimg--${SRC_PATH_BASENAME} $DST_PATH"
+
