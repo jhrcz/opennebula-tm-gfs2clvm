@@ -35,6 +35,8 @@ fi
 SRC_PATH=`arg_path $SRC`
 SRC_PATH_BASENAME=$( basename ${SRC_PATH} )
 
+DST_PATH=`arg_path $DST`
+
 #log "Link $SRC_PATH (non shared dir, will clone)"
 #exec_and_log "ln -s $SRC_PATH $DST_PATH"
 log "Link /dev/mapper/${VG_NAME}-lv--oneimg--${SRC_PATH_BASENAME} to $DST_PATH"
