@@ -31,16 +31,23 @@ fi
 . $TMCOMMON
 . $LVMRC
 
+# include file with VG_NAME definition
+source $ETC_LOCATION/tm_gfs2clvm/tm_gfs2clvmrc
+
 SRC_PATH=`arg_path $SRC`
 DST_PATH=`arg_path $DST`
 
 SRC_HOST=`arg_host $SRC`
 DST_HOST=`arg_host $DST`
 
+SRC_BASENAME=$( basename "$SRC" )
+
 if [ -z $SIZE ] ; then
-	SIZE=$($SSH $DST_HOST du --block-size=1G $SRC_PATH | awk '{print $1}')
-	SIZE=$(($SIZE + 1))
-	SIZE=${SIZE}G
+    src_volume=lv-oneimg-${SRC_BASENAME}
+    hostname=$DST_HOST
+    src_volume_size=$(set -x ; ssh $hostname sudo /sbin/lvs --noheadings --units m | grep $src_volume 2>/dev/null | ( read lv vg states size ; echo $size) )
+    SIZE=${src_volume_size/M/}
+    log "size: $SIZE"
 fi
 
 if [ -z $SIZE ] ; then
@@ -85,11 +92,11 @@ http://*)
 #------------------------------------------------------------------------------
 *)
     log "Creating LV $LV_NAME"
-    exec_and_log "$SSH $DST_HOST $SUDO $LVCREATE -L$SIZE -n $LV_NAME $VG_NAME"
+    exec_and_log "$SSH $DST_HOST $SUDO $LVCREATE -L${SIZE}M -n $LV_NAME $VG_NAME"
     exec_and_log "$SSH $DST_HOST ln -s /dev/$VG_NAME/$LV_NAME $DST_PATH"
     #exec_and_log "$SSH $DST_HOST chown oneadmin: $DST_PATH"
 
     log "Dumping Image"
-    exec_and_log "eval $SSH $DST_HOST $DD if=$SRC_PATH of=/dev/$VG_NAME/$LV_NAME bs=64k"
+    exec_and_log "eval $SSH $DST_HOST $DD if=/dev/mapper/${VG_NAME}-lv--oneimg--${SRC_BASENAME} of=/dev/$VG_NAME/$LV_NAME bs=64k"
     ;;
 esac

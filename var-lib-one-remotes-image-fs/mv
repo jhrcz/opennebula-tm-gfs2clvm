@@ -41,6 +41,7 @@ ID=$3
 if [ "$DST" = "-" ] ; then 
     DST=`generate_image_path`
 fi
+DST_BASENAME=$( basename "$DST" )
 
 # ------------ Move the image to the repository ------------ 
 
@@ -58,6 +59,11 @@ http://*)
          \( "`$READLINK -f $SRC`" = "`$READLINK -f $DST`" \) ] ; then
        log "Not moving files to image repo, they are the same"
     else
+
+       log "No moving needed already existing volume should be on hashed lvm"
+       exit 0
+
+
        log "mv SRC: $SRC"
        log "mv DST: $DST"
        # the whole db reseult for machine is present in the db even if it is already in shutdown/done state
@@ -84,6 +90,8 @@ fi
 # ---------------- Get the size of the image ------------
 # if $src_host is defined, then this argument is used to call
 # commands in fs_du via ssh
-SIZE=`fs_du $DST $src_host`
+#SIZE=`fs_du $DST $src_host`
+hostname=$src_host
+SIZE=$(ssh $hostname sudo /sbin/lvs --noheadings --units m | grep lv-oneimg-${DST_BASENAME} 2>/dev/null | ( read lv vg states size ; echo $size) )
 
 echo "$DST $SIZE"
