@@ -6,9 +6,9 @@
 The **gfs2clvm** transfer manager driver provides the needed functionality
 for running OpenNebula on SAN storage with these premises:
 
-* Virtual machines runing from Clustered LVM
+* Virtual machines runing from Clustered LVM (persistnet and nonpersistent running vms, for SOURCE in templates)
 
-* OS templates and images stored on GFS2 shared storage
+* OS template images stored on GFS2 shared storage (bootable isos, for PATH in image template )
 
 * Management node connected to the virtualisation cluster via SSH only
 
@@ -20,6 +20,34 @@ Other nice featurs
 * Logical volumes created for virtual machines owned by "oneadmin" user, so the
   commonly required sudo for "dd" command in suoers is not needed
 
+* copy/snapshot/clone of machine in SUSPENDED state
+  by using lvm://{{VMID}}/{{DISKID}} as path
+
+Known drawbacks
+
+* Still requires selinux in persmissive mode
+
+## STORAGE LOGIC EXPLAINED
+
+The GFS2 volume in one of the LV is for /var/lib/one on worker nodes,
+context.sh contextualisation isos, vm checkpoints, deployment.X and
+disk.X symlinks are here. All the files for oned are on the management
+node, in /var/lib/one. This storage is NOT shared betwen management
+node and worker nodes.
+
+All the images created dynamicaly by opennebula are placed in clvm.
+
+So in the VG, there is
+
+* LV for gfs2
+
+* LVs "lv-one-XXX-X" for nonpresistent, dynamicaly created volumes - these
+  volumes are lost when vm is shutdown/deleted/redeployed
+
+* LVs "lv-oneimg-XXXXXXXXXXX for volumes created by opennebula (by saveas,
+  cloning, import etc. they replacement of "hash-like" named files in
+  /var/lib/one/images)
+
 ## INSTALLATION
 
 Files are divided into subdirectories representing destination locations
@@ -28,6 +56,7 @@ Files are divided into subdirectories representing destination locations
 * etc-sudoers-d 				/etc/sudoers.d/			(sudo rules)
 * etc-udev-rules-d 				/etc/udev/rules.d/		(lvm lv ownership)
 * usr-lib-one-tm_commands 			/usr/lib/one/tm_commands/	(tm driver)
+* var-lib-one-remotes-image-fs 			/var/lib/one/remotes/image/fs/  (im driver)
 * etc-polkit-1-localauthority-50-local.d 	/etc/polkit-1/localauthority/50-local.d/
 
 Other configuration changes
@@ -44,30 +73,31 @@ Other configuration changes
 
 ## CURRENT STATE
 
-* instantiate		OK
-* resubmit 		OK
+* instantiate			OK
+* resubmit 			OK
 
-* reboot 		OK
+* reboot 			OK
 
-* livemigrate 		OK
+* livemigrate 			OK
 
-* suspend 		OK
+* suspend 			OK
 
-* migrate 		OK
-* stop 			OK
-* resume 		OK
+* migrate 			OK
+* stop 				OK
+* resume 			OK
 
-* cancel 		OK
-* shutdown 		OK
-* delete 		OK
-* saveas + shutdown 	OK (custom remotes)
+* cancel 			OK
+* shutdown 			OK
+* delete 			OK
+* saveas + shutdown 		OK (custom remotes)
 
-Everything tested on EL6x (as of 2012-02-20, CentOS 6.2)
+* snapshot suspended machine 	OK
+* import ttylinux from file 	OK
+* create new datablock volume 	OK
 
-Some extra features, maybe not expected
+* persistence 			OK
 
-* copy of machine in SUSPENDED state
-  by using lvm://{{VMID}}/{{DISKID}} as source
+Everything tested on EL6x (as of 2012-03-02, CentOS 6.2)
 
 
 ## ABOUT OPENNEBULA
