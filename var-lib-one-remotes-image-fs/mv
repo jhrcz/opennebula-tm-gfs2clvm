@@ -41,6 +41,7 @@ ID=$3
 if [ "$DST" = "-" ] ; then 
     DST=`generate_image_path`
 fi
+DST_BASENAME=$( basename "$DST" )
 
 # ------------ Move the image to the repository ------------ 
 
@@ -89,6 +90,8 @@ fi
 # ---------------- Get the size of the image ------------
 # if $src_host is defined, then this argument is used to call
 # commands in fs_du via ssh
-SIZE=`fs_du $DST $src_host`
+#SIZE=`fs_du $DST $src_host`
+hostname=$src_host
+SIZE=$(ssh $hostname sudo /sbin/lvs --noheadings --units M | grep lv-oneimg-${DST_BASENAME} 2>/dev/null | ( read lv vg states size ; echo $size) )
 
 echo "$DST $SIZE"

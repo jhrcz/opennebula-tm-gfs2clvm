@@ -84,15 +84,19 @@ lvm://*)
     vmid_diskid_pair=$( echo "$SRC" | sed 's,lvm://,,')
     vmid=$( echo "$vmid_diskid_pair" | cut -d "/" -f 1 )
     diskid=$( echo "$vmid_diskid_pair" | cut -d "/" -f 2 )
-    src_volume=/dev/mapper/${VG_NAME}-lv--one--${vmid}--${diskid}
+    src_volume_mapper_path=/dev/mapper/${VG_NAME}-lv--one--${vmid}--${diskid}
+    src_volume=lv-one-${vmid}-${diskid}
     
     hostname=$(onehost list -l NAME,STAT | grep 'on$' | head -n 1 | awk '{print $1}')
-    log "hostname: $hosname"
-    #exec_and_log "ssh $hostname dd if=${src_volume} of=$DST" \
-    #    "Error copying ${src_volume} to $DST"
+    log "hostname: $hostname"
+    #exec_and_log "ssh $hostname dd if=${src_volume_mapper_path} of=$DST" \
+    #    "Error copying ${src_volume_mapper_path} to $DST"
 
     # $SSH $DST_HOST $SUDO $LVCREATE
-    exec_and_log "ssh $hostname sudo lvcreate -L 16384M -n lv-oneimg-${DST_BASENAME} ${VG_NAME}" \
+    src_volume_size=$(set -x ; ssh $hostname sudo /sbin/lvs --noheadings --units M | grep $src_volume 2>/dev/null | ( read lv vg states size ; echo $size) )
+    SIZE=${src_volume_size/M/}
+    log "size: $SIZE"
+    exec_and_log "ssh $hostname sudo lvcreate -L ${SIZE}M -n lv-oneimg-${DST_BASENAME} ${VG_NAME}" \
         "Error creating LV ${VG_NAME}/lv-oneimg-${DST_BASENAME}"
     exec_and_log "ssh $hostname dd if=/var/lib/one/${vmid}/images/disk.${diskid} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" \
         "Error copying /var/lib/one/${vmid}/images/disk.${diskid} to $DST_BASENAME"
@@ -120,6 +124,7 @@ esac
 
 
 #SIZE=`fs_du $DST $hostname`
+SIZE=$(ssh $hostname sudo /sbin/lvs --noheadings --units M | grep lv-oneimg-${DST_BASENAME} 2>/dev/null | ( read lv vg states size ; echo $size) )
 
-#echo "$DST $SIZE"
-echo "$DST 16384M"
+echo "$DST $SIZE"
+#echo "$DST 16384M"
