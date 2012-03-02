@@ -31,11 +31,16 @@ fi
 . $TMCOMMON
 . $LVMRC
 
+# include file with VG_NAME definition
+source $ETC_LOCATION/tm_gfs2clvm/tm_gfs2clvmrc
+
 SRC_PATH=`arg_path $SRC`
 DST_PATH=`arg_path $DST`
 
 SRC_HOST=`arg_host $SRC`
 DST_HOST=`arg_host $DST`
+
+SRC_BASENAME=$( basename "$SRC" )
 
 if [ -z $SIZE ] ; then
 	SIZE=$($SSH $DST_HOST du --block-size=1G $SRC_PATH | awk '{print $1}')
@@ -90,6 +95,6 @@ http://*)
     #exec_and_log "$SSH $DST_HOST chown oneadmin: $DST_PATH"
 
     log "Dumping Image"
-    exec_and_log "eval $SSH $DST_HOST $DD if=$SRC_PATH of=/dev/$VG_NAME/$LV_NAME bs=64k"
+    exec_and_log "eval $SSH $DST_HOST $DD if=/dev/mapper/${VG_NAME}-lv--oneimg--${SRC_BASENAME} of=/dev/$VG_NAME/$LV_NAME bs=64k"
     ;;
 esac
