@@ -47,5 +47,7 @@ exec_and_log "$SSH $DST_HOST ln -s /dev/$VG_NAME/$LV_NAME $DST_PATH"
 
 log "Dumping Image"
 #exec_and_log "eval $SSH $DST_HOST $DD if=/dev/zero of=/dev/$VG_NAME/$LV_NAME bs=64k"
-exec_and_log "$SSH $DST_HOST $MKFS_CMD"
+
+# mkfs is not in PATH, so override with full path specified
+exec_and_log "$SSH $DST_HOST ${MKFS_CMD/mkfs//sbin/mkfs}"
 
