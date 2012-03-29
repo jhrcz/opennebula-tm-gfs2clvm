@@ -21,11 +21,16 @@ Other nice featurs
   commonly required sudo for "dd" command in suoers is not needed
 
 * copy/snapshot/clone of machine in SUSPENDED state
-  by using lvm://{{VMID}}/{{DISKID}} as path
+  by using lvm://{{VMID}}/{{DISKID}} as source
+
+* copy/snapshot/clone of any volume by its ID, useful for persistent OS creation from saved template OS image
+  by using vol://{{VOLID}} as source
 
 Known drawbacks
 
 * Still requires selinux in persmissive mode
+
+* targeted at core IT staff, no acl/permissions when using lvm: and vol: volume sources
 
 ## STORAGE LOGIC EXPLAINED
 
@@ -96,6 +101,8 @@ Other configuration changes
 * create new datablock volume 	OK
 
 * persistence 			OK
+
+* new OS image from other img 	OK
 
 Everything tested on EL6x (as of 2012-03-02, CentOS 6.2)
 
