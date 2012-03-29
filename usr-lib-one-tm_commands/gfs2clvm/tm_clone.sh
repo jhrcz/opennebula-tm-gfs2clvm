@@ -74,7 +74,7 @@ http://*)
     exec_and_log "$SSH $DST_HOST ln -s /dev/$VG_NAME/$LV_NAME $DST_PATH"
 
     log "Dumping Image into /dev/$VG_NAME/$LV_NAME"
-    exec_and_log "eval $SSH $DST_HOST '$WGET $SRC -q -O- | $DD of=/dev/$VG_NAME/$LV_NAME bs=64k'"
+    exec_and_log "eval $SSH $DST_HOST '$WGET $SRC -q -O- | $DD of=/dev/$VG_NAME/$LV_NAME bs=4M'"
     ;;
 
 #------------------------------------------------------------------------------
@@ -97,6 +97,6 @@ http://*)
     #exec_and_log "$SSH $DST_HOST chown oneadmin: $DST_PATH"
 
     log "Dumping Image"
-    exec_and_log "eval $SSH $DST_HOST $DD if=/dev/mapper/${VG_NAME}-lv--oneimg--${SRC_BASENAME} of=/dev/$VG_NAME/$LV_NAME bs=64k"
+    exec_and_log "eval $SSH $DST_HOST $DD if=/dev/mapper/${VG_NAME}-lv--oneimg--${SRC_BASENAME} of=/dev/$VG_NAME/$LV_NAME bs=4M"
     ;;
 esac
