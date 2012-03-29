@@ -104,8 +104,35 @@ lvm://*)
     log "size: $SIZE"
     exec_and_log "ssh $hostname sudo lvcreate -L ${SIZE}M -n lv-oneimg-${DST_BASENAME} ${VG_NAME}" \
         "Error creating LV ${VG_NAME}/lv-oneimg-${DST_BASENAME}"
-    exec_and_log "ssh $hostname dd if=/var/lib/one/${vmid}/images/disk.${diskid} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME} bs=4M"
+    exec_and_log "ssh $hostname dd if=/var/lib/one/${vmid}/images/disk.${diskid} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" \
         "Error copying /var/lib/one/${vmid}/images/disk.${diskid} to $DST_BASENAME"
+    ;;
+
+vol://*)
+    #
+    # copy of existing machine could be created
+    # by using lvm://{{VMID}}/{{DISKID}}
+    #
+    vmid_diskid_pair=$( echo "$SRC" | sed 's,vol://,,')
+    diskid=$( echo "$vmid_diskid_pair" )
+    diskid_hashed=$( oneimage show "$diskid" | grep SOURCE | sed -e 's,.*/,,')
+    log "diskid_hashed: $diskid_hashed"
+    src_volume_mapper_path=/dev/mapper/${VG_NAME}-lv--oneimg--${diskid_hashed}
+    src_volume=lv-oneimg-${diskid_hashed}
+    
+    hostname=$(onehost list -l NAME,STAT | grep 'on$' | head -n 1 | awk '{print $1}')
+    log "hostname: $hostname"
+    #exec_and_log "ssh $hostname dd if=${src_volume_mapper_path} of=$DST" \
+    #    "Error copying ${src_volume_mapper_path} to $DST"
+
+    # $SSH $DST_HOST $SUDO $LVCREATE
+    src_volume_size=$(set -x ; ssh $hostname sudo /sbin/lvs --noheadings --units m | grep $src_volume 2>/dev/null | ( read lv vg states size ; echo $size) )
+    SIZE=${src_volume_size/M/}
+    log "size: $SIZE"
+    exec_and_log "ssh $hostname sudo lvcreate -L ${SIZE}M -n lv-oneimg-${DST_BASENAME} ${VG_NAME}" \
+        "Error creating LV ${VG_NAME}/lv-oneimg-${DST_BASENAME}"
+    exec_and_log "ssh $hostname dd if=${src_volume_mapper_path} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" \
+        "Error copying ${src_volume_mapper_path} to $DST_BASENAME"
     ;;
 
 *)
@@ -124,7 +151,7 @@ lvm://*)
     log "size: $SIZE"
     exec_and_log "ssh $hostname sudo lvcreate -L ${SIZE}M -n lv-oneimg-${DST_BASENAME} ${VG_NAME}" \
         "Error creating LV ${VG_NAME}/lv-oneimg-${DST_BASENAME}"
-    exec_and_log "ssh $hostname dd if=$SRC_PATH of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME} bs=4M" \
+    exec_and_log "ssh $hostname dd if=$SRC_PATH of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" \
         "Error copying $SRC_PATH to $DST_BASENAME"
     ;;
 esac
