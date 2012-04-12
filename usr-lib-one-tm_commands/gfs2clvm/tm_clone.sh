@@ -88,6 +88,20 @@ http://*)
     ;;
 
 #------------------------------------------------------------------------------
+#Get the image from SRC_HOST and dump it to a new LV for iso images
+#------------------------------------------------------------------------------
+*.iso)
+    log "Creating LV $LV_NAME"
+    SIZE=640
+    exec_and_log "$SSH $DST_HOST $SUDO $LVCREATE -L${SIZE}M -n $LV_NAME $VG_NAME"
+    exec_and_log "$SSH $DST_HOST ln -s /dev/$VG_NAME/$LV_NAME $DST_PATH"
+    #exec_and_log "$SSH $DST_HOST chown oneadmin: $DST_PATH"
+
+    log "Dumping Image"
+    exec_and_log "eval $SSH $DST_HOST $DD if=${SRC_PATH} of=/dev/$VG_NAME/$LV_NAME bs=4M"
+    ;;
+
+#------------------------------------------------------------------------------
 #Get the image from SRC_HOST and dump it to a new LV
 #------------------------------------------------------------------------------
 *)
