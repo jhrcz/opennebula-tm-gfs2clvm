@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # -------------------------------------------------------------------------- #
 # Copyright 2002-2012, OpenNebula Project Leads (OpenNebula.org)             #
 #                                                                            #
@@ -14,25 +16,44 @@
 # limitations under the License.                                             #
 #--------------------------------------------------------------------------- #
 
-# -------------------------------------------------------------------------- #
+###############################################################################
+# This script is used to copy a VM image (SRC) to the image repository as DST
+# Several SRC types are supported
+###############################################################################
 
-# Volume Group to create logical volumes or snapshots in the cluster nodes   # 
-VG_NAME=
+# -------- Set up the environment to source common tools & conf ------------
 
-# Default size for logical volumes if not specified
-DEFAULT_LV_SIZE="1G"
+if [ -z "${ONE_LOCATION}" ]; then
+    LIB_LOCATION=/usr/lib/one
+else
+    LIB_LOCATION=$ONE_LOCATION/lib
+fi
 
-# -------------------------------------------------------------------------- #
-# Helper functions for the LVM plugin                                        #
-# -------------------------------------------------------------------------- #
+. $LIB_LOCATION/sh/scripts_common.sh
 
-function get_vid {
-    echo $1 |$SED -e 's%^.*/([^/]*)/images.*$%\1%'
-}
+DRIVER_PATH=$(dirname $0)
+source ${DRIVER_PATH}/../libfs.sh
 
-function get_lv_name {
-    VID=`get_vid $1`
-    DISK=`echo $1|$AWK -F. '{printf $NF}'`
-    echo "lv-one-$VID-$DISK"
-}
+# -------- Get cp and datastore arguments from OpenNebula core ------------
 
+DRV_ACTION=$1
+ID=$2
+
+XPATH="${DRIVER_PATH}/../xpath.rb -b $DRV_ACTION"
+
+unset i XPATH_ELEMENTS
+
+while IFS= read -r -d '' element; do
+    XPATH_ELEMENTS[i++]="$element"
+done < <($XPATH /DS_DRIVER_ACTION_DATA/IMAGE/PATH)
+
+SRC="${XPATH_ELEMENTS[0]}"
+
+SIZE=`fs_size $SRC`
+
+if [ "$SIZE" = "0" ]; then
+    log_error "Cannot determine size for $SRC"
+    exit -1
+fi
+
+echo "$SIZE"
