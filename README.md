@@ -3,6 +3,8 @@
 
 **WARNING** this is WORK in PROGRESS tree preparing for next OpenNebula release
 
+stable "known to work" version used in production (ONE 3.4) version in **gfs2clvm-one-3.4** branch
+
 ## DESCRIPTION
 
 The **gfs2clvm** transfer manager driver provides the needed functionality
