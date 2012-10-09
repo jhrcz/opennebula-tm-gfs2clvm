@@ -15,19 +15,15 @@
 # See the License for the specific language governing permissions and        #
 # limitations under the License.                                             #
 #--------------------------------------------------------------------------- #
+# POSTMIGRATE SOURCE DST remote_system_dir vmid dsid template
+#  - SOURCE is the host where the VM is running
+#  - DST is the host where the VM is to be migrated
+#  - remote_system_dir is the path for the VM home in the system datastore
+#  - vmid is the id of the VM
+#  - dsid is the target datastore
+#  - template is the template of the VM in XML and base64 encoded
 
-# mkswap size host:remote_system_ds/disk.i size vmid dsid
-#   - size in MB of the image
-#   - host is the target host to deploy the VM
-#   - remote_system_ds is the path for the system datastore in the host
-#   - vmid is the id of the VM
-#   - dsid is the target datastore (0 is the system datastore)
+# To access the vm_template you can use the xpath.rb utility. Check the
+# datastore drivers for an example.
 
-SIZE=$1
-DST=$2
-
-VMID=$3
-DSID=$4
-
-CMD="`dirname $0`/mkimage $SIZE swap $DST $VMID $DSID"
-`$CMD`
+exit 0
