@@ -1,4 +1,0 @@
-# volume name example: vg_cloudstorage-lv--one--166--0
-SUBSYSTEM=="block",KERNEL=="dm-*",ACTION=="add|change",ENV{DM_NAME}=="vg_*-lv--one--*",OWNER="oneadmin"
-SUBSYSTEM=="block",KERNEL=="dm-*",ACTION=="add|change",ENV{DM_NAME}=="vg_*-lv--oneimg--*",OWNER="oneadmin"
-

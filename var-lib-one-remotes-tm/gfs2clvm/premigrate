@@ -15,30 +15,15 @@
 # See the License for the specific language governing permissions and        #
 # limitations under the License.                                             #
 #--------------------------------------------------------------------------- #
+# PREMIGRATE SOURCE DST remote_system_dir vmid dsid template
+#  - SOURCE is the host where the VM is running
+#  - DST is the host where the VM is to be migrated
+#  - remote_system_dir is the path for the VM home in the system datastore
+#  - vmid is the id of the VM
+#  - dsid is the target datastore
+#  - template is the template of the VM in XML and base64 encoded
 
-SIZE=$1
-DST=$2
+# To access the vm_template you can use the xpath.rb utility. Check the
+# datastore drivers for an example.
 
-if [ -z "${ONE_LOCATION}" ]; then
-    TMCOMMON=/usr/lib/one/mads/tm_common.sh
-else
-    TMCOMMON=$ONE_LOCATION/lib/mads/tm_common.sh
-fi
-
-. $TMCOMMON
-MKSWAP=/sbin/mkswap
-
-DST_PATH=`arg_path $DST`
-DST_HOST=`arg_host $DST`
-
-DST_DIR=`dirname $DST_PATH`
-
-log "Creating ${SIZE}Mb image in $DST_PATH"
-exec_and_log "$SSH $DST_HOST mkdir -p $DST_DIR"
-exec_and_log "$SSH $DST_HOST $DD if=/dev/zero of=$DST_PATH bs=1 count=1 seek=${SIZE}M"
-
-log "Initializing swap space"
-exec_and_log "$SSH $DST_HOST $MKSWAP $DST_PATH"
-
-exec_and_log "$SSH $DST_HOST chmod a+w $DST_PATH"
-
+exit 0

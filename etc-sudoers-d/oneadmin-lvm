@@ -1,6 +1,0 @@
-oneadmin ALL=(root)     NOPASSWD:/sbin/lvcreate
-oneadmin ALL=(root)     NOPASSWD:/sbin/lvremove
-oneadmin ALL=(root)     NOPASSWD:/sbin/lvs
-#oneadmin ALL=(root)     NOPASSWD:/bin/dd
-oneadmin ALL=(root)     NOPASSWD:/bin/echo
-

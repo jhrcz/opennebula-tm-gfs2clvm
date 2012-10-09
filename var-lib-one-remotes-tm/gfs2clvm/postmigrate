@@ -15,37 +15,15 @@
 # See the License for the specific language governing permissions and        #
 # limitations under the License.                                             #
 #--------------------------------------------------------------------------- #
+# POSTMIGRATE SOURCE DST remote_system_dir vmid dsid template
+#  - SOURCE is the host where the VM is running
+#  - DST is the host where the VM is to be migrated
+#  - remote_system_dir is the path for the VM home in the system datastore
+#  - vmid is the id of the VM
+#  - dsid is the target datastore
+#  - template is the template of the VM in XML and base64 encoded
 
-SRC=$1
-DST=$2
+# To access the vm_template you can use the xpath.rb utility. Check the
+# datastore drivers for an example.
 
-if [ -z "${ONE_LOCATION}" ]; then
-    TMCOMMON=/usr/lib/one/mads/tm_common.sh
-    LVMRC=/etc/one/tm_gfs2clvm/tm_gfs2clvmrc
-else
-    TMCOMMON=$ONE_LOCATION/lib/mads/tm_common.sh
-    LVMRC=$ONE_LOCATION/etc/tm_gfs2clvm/tm_gfs2clvmrc
-fi
-
-. $TMCOMMON
-. $LVMRC
-
-SRC_PATH=`arg_path $SRC`
-DST_PATH=`arg_path $DST`
-
-SRC_HOST=`arg_host $SRC`
-DST_HOST=`arg_host $DST`
-
-DST_DIR=`dirname $DST_PATH`
-
-VID=`get_vid $SRC_PATH`
-
-if [ -z $SIZE ] ; then
-    SIZE=$DEFAULT_LV_SIZE
-fi
-
-if [ "$SRC_PATH" == "$DST_PATH" ]; then
-    log "Will not move, source and destination are equal"
-    exit 0
-fi
-
+exit 0

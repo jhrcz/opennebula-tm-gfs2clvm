@@ -1,9 +1,0 @@
-# content of file: /etc/polkit-1/localauthority/50-local.d/50-org.libvirt.unix.manage-opennebula.pkla
-[Allow oneadmin user to manage virtual machines]
-Identity=unix-user:oneadmin
-Action=org.libvirt.unix.manage
-#Action=org.libvirt.unix.monitor
-ResultAny=yes
-ResultInactive=yes
-ResultActive=yes
-
