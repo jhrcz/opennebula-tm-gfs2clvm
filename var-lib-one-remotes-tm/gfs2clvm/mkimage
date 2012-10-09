@@ -55,7 +55,7 @@ MKFS_CMD=`mkfs_command $DST_PATH $FSTYPE $SIZE`
 
 #VG_NAME=$(echo $DST_PATH|cut -d. -f1)
 DRIVER_PATH=$(dirname $0)
-source ${DRIVER_PATH}/../../datastore/lvm/lvm.conf
+source ${DRIVER_PATH}/../../datastore/gfs2clvm/lvm.conf
 #LV_NAME=$(echo $DST_PATH|cut -d. -f2)
 VMVOLID="${DST##*/disk.}"
 LV_NAME="lv-one-${VMID}-${VMVOLID}"
