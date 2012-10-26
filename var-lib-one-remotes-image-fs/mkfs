@@ -44,7 +44,7 @@ ID=$3
 DST=`generate_image_path`
 DST_BASENAME=$( basename "$DST" )
 
-MKFS_CMD=`mkfs_command /dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" $FSTYPE`
+MKFS_CMD=`mkfs_command "/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" $FSTYPE`
 
 hostname=$(onehost list -l NAME,STAT | grep 'on$' | head -n 1 | awk '{print $1}')
 log "hostname: $hosname"
