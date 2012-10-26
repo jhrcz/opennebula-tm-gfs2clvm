@@ -95,4 +95,4 @@ hostname=$src_host
 SIZE=$(ssh $hostname sudo /sbin/lvs --noheadings --units m | grep lv-oneimg-${DST_BASENAME} 2>/dev/null | ( read lv vg states size ; echo $size) )
 SIZE=${SIZE/.00m}
 
-echo "$DST $SIZE"
+echo "$DST ${SIZE}M"
