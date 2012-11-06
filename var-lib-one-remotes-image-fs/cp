@@ -105,7 +105,7 @@ lvm://*)
     log "size: $SIZE"
     exec_and_log "ssh $hostname sudo lvcreate -L ${SIZE}M -n lv-oneimg-${DST_BASENAME} ${VG_NAME}" \
         "Error creating LV ${VG_NAME}/lv-oneimg-${DST_BASENAME}"
-    exec_and_log "ssh $hostname dd if=/var/lib/one/${vmid}/images/disk.${diskid} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" \
+    exec_and_log "ssh $hostname dd if=/var/lib/one/${vmid}/images/disk.${diskid} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME} bs=4M" \
         "Error copying /var/lib/one/${vmid}/images/disk.${diskid} to $DST_BASENAME"
     ;;
 
@@ -123,7 +123,7 @@ vol://*)
     
     hostname=$(onehost list -l NAME,STAT | grep 'on$' | head -n 1 | awk '{print $1}')
     log "hostname: $hostname"
-    #exec_and_log "ssh $hostname dd if=${src_volume_mapper_path} of=$DST" \
+    #exec_and_log "ssh $hostname dd if=${src_volume_mapper_path} of=$DST bs=4M" \
     #    "Error copying ${src_volume_mapper_path} to $DST"
 
     # $SSH $DST_HOST $SUDO $LVCREATE
@@ -133,7 +133,7 @@ vol://*)
     log "size: $SIZE"
     exec_and_log "ssh $hostname sudo lvcreate -L ${SIZE}M -n lv-oneimg-${DST_BASENAME} ${VG_NAME}" \
         "Error creating LV ${VG_NAME}/lv-oneimg-${DST_BASENAME}"
-    exec_and_log "ssh $hostname dd if=${src_volume_mapper_path} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" \
+    exec_and_log "ssh $hostname dd if=${src_volume_mapper_path} of=/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME} bs=4M" \
         "Error copying ${src_volume_mapper_path} to $DST_BASENAME"
     ;;
 
