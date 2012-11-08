@@ -36,3 +36,5 @@ function get_lv_name {
     echo "lv-one-$VID-$DISK"
 }
 
+DD_BS=4M
+

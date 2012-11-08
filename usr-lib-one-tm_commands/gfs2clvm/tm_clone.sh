@@ -31,7 +31,10 @@ fi
 . $TMCOMMON
 . $LVMRC
 
+#source /var/lib/one/remotes/image/fs/fsrc
 # include file with VG_NAME definition
+# included because of dd optimalizations
+ETC_LOCATION=/etc/one
 source $ETC_LOCATION/tm_gfs2clvm/tm_gfs2clvmrc
 
 SRC_PATH=`arg_path $SRC`
@@ -74,7 +77,7 @@ http://*)
     exec_and_log "$SSH $DST_HOST ln -s /dev/$VG_NAME/$LV_NAME $DST_PATH"
 
     log "Dumping Image into /dev/$VG_NAME/$LV_NAME"
-    exec_and_log "eval $SSH $DST_HOST '$WGET $SRC -q -O- | $DD of=/dev/$VG_NAME/$LV_NAME bs=4M'"
+    exec_and_log "eval $SSH $DST_HOST '$WGET $SRC -q -O- | $DD of=/dev/$VG_NAME/$LV_NAME bs=$DD_BS'"
     ;;
 
 #------------------------------------------------------------------------------
@@ -98,7 +101,7 @@ http://*)
     #exec_and_log "$SSH $DST_HOST chown oneadmin: $DST_PATH"
 
     log "Dumping Image"
-    exec_and_log "eval $SSH $DST_HOST $DD if=${SRC_PATH} of=/dev/$VG_NAME/$LV_NAME bs=4M"
+    exec_and_log "eval $SSH $DST_HOST $DD if=${SRC_PATH} of=/dev/$VG_NAME/$LV_NAME bs=$DD_BS"
     ;;
 
 #------------------------------------------------------------------------------
@@ -111,6 +114,6 @@ http://*)
     #exec_and_log "$SSH $DST_HOST chown oneadmin: $DST_PATH"
 
     log "Dumping Image"
-    exec_and_log "eval $SSH $DST_HOST $DD if=/dev/mapper/${VG_NAME}-lv--oneimg--${SRC_BASENAME} of=/dev/$VG_NAME/$LV_NAME bs=4M"
+    exec_and_log "eval $SSH $DST_HOST $DD if=/dev/mapper/${VG_NAME}-lv--oneimg--${SRC_BASENAME} of=/dev/$VG_NAME/$LV_NAME bs=$DD_BS"
     ;;
 esac
