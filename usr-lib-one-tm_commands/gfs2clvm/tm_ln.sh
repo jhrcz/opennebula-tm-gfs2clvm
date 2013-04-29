@@ -43,5 +43,5 @@ DST_PATH_DIRNAME=$( dirname ${DST_PATH} )
 #exec_and_log "ln -s $SRC_PATH $DST_PATH"
 log "Link /dev/mapper/${VG_NAME}-lv--oneimg--${SRC_PATH_BASENAME} to $DST_PATH"
 exec_and_log "$SSH $DST_HOST mkdir -p $DST_PATH_DIRNAME"
-exec_and_log "$SSH $DST_HOST ln -s /dev/mapper/${VG_NAME}-lv--oneimg--${SRC_PATH_BASENAME} $DST_PATH"
+exec_and_log "$SSH $DST_HOST ln -sf /dev/mapper/${VG_NAME}-lv--oneimg--${SRC_PATH_BASENAME} $DST_PATH"
 
