@@ -65,6 +65,6 @@ for f in $SRC; do
 done
 
 exec_and_log "$SSH $DST_HOST $MKISOFS -o $TMP_DIR/$DST_FILE -J -R $ISO_DIR"
-exec_and_log "$SSH $DST_HOST mkdir -p $DST"
+exec_and_log "$SSH $DST_HOST mkdir -p $DST_DIR"
 exec_and_log "$SSH $DST_HOST cp $TMP_DIR/$DST_FILE $DST_DIR"
 exec_and_log "$SSH $DST_HOST rm -rf $TMP_DIR"
