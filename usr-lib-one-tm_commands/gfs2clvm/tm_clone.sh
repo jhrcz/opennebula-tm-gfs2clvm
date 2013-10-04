@@ -104,6 +104,10 @@ http://*)
     exec_and_log "eval $SSH $DST_HOST $DD if=${SRC_PATH} of=/dev/$VG_NAME/$LV_NAME bs=$DD_BS"
     ;;
 
+*.isox)
+    exec_and_log "$SSH $DST_HOST ln -s ${SRC_PATH} $DST_PATH"
+    ;;
+
 #------------------------------------------------------------------------------
 #Get the image from SRC_HOST and dump it to a new LV
 #------------------------------------------------------------------------------

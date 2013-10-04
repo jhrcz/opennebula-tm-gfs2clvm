@@ -26,6 +26,9 @@ Other nice featurs
 * copy/snapshot/clone of any volume by its ID, useful for persistent OS creation from saved template OS image
   by using vol://{{VOLID}} as source
 
+* when ISO file is named .isox and used for as image, lvm is not used, just symlink to the iso file
+  thins enables usecase for installing OS from dvd drive or other media bigger than 640M
+
 Known drawbacks
 
 * Still requires selinux in persmissive mode
