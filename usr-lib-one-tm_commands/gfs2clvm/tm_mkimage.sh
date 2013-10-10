@@ -41,6 +41,7 @@ LV_NAME=`get_lv_name $DST_PATH`
 
 log "Creating LV $LV_NAME"
 exec_and_log "$SSH $DST_HOST $SUDO $LVCREATE -L$SIZE -n $LV_NAME $VG_NAME"
+sleep 3
 exec_and_log "$SSH $DST_HOST mkdir -p $DST_DIR"
 exec_and_log "$SSH $DST_HOST ln -s /dev/$VG_NAME/$LV_NAME $DST_PATH"
 #exec_and_log "$SSH $DST_HOST chown oneadmin: $DST_PATH"
