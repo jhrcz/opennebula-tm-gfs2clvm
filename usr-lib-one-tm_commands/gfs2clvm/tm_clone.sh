@@ -49,7 +49,8 @@ if [ -z $SIZE ] ; then
     src_volume=lv-oneimg-${SRC_BASENAME}
     hostname=$DST_HOST
     src_volume_size=$(set -x ; ssh $hostname sudo /sbin/lvs --noheadings --units m | grep $src_volume 2>/dev/null | ( read lv vg states size ; echo $size) )
-    SIZE=${src_volume_size/M/}
+    SIZE=${src_volume_size}
+    SIZE=${SIZE/.00m}
     log "size: $SIZE"
 fi
 
