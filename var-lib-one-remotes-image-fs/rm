@@ -40,7 +40,7 @@ SRC=$1
 SRC_BASENAME=$( basename "$SRC" )
 
 hostname=$(onehost list -l NAME,STAT | grep 'on$' | head -n 1 | awk '{print $1}')
-log "hostname: $hosname"
+log "hostname: $hostname"
 
 exec_and_log "ssh $hostname sudo lvremove -f ${VG_NAME}/lv-oneimg-${SRC_BASENAME}" \
     "Error deleting ${VG_NAME}/lv-oneimg-${SRC_BASENAME}"
