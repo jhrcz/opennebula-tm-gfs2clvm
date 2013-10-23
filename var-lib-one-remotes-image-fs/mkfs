@@ -48,6 +48,7 @@ MKFS_CMD=`mkfs_command "/dev/mapper/${VG_NAME}-lv--oneimg--${DST_BASENAME}" $FST
 
 hostname=$(onehost list -l NAME,STAT | grep 'on$' | head -n 1 | awk '{print $1}')
 log "hostname: $hostname"
+[ -n "$hostname" ] || exit 1
 
 exec_and_log "ssh $hostname  sudo lvcreate -L ${SIZE}M -n lv-oneimg-${DST_BASENAME} ${VG_NAME}" \
     "Error creating LV ${VG_NAME}/lv-oneimg-${DST_BASENAME}"

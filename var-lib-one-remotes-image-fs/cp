@@ -95,6 +95,7 @@ lvm://*)
     
     hostname=$(onehost list -l NAME,STAT | grep 'on$' | head -n 1 | awk '{print $1}')
     log "hostname: $hostname"
+    [ -n "$hostname" ] || exit 1
     #exec_and_log "ssh $hostname dd if=${src_volume_mapper_path} of=$DST" \
     #    "Error copying ${src_volume_mapper_path} to $DST"
 
@@ -123,6 +124,7 @@ vol://*)
     
     hostname=$(onehost list -l NAME,STAT | grep 'on$' | head -n 1 | awk '{print $1}')
     log "hostname: $hostname"
+    [ -n "$hostname" ] || exit 1
     #exec_and_log "ssh $hostname dd if=${src_volume_mapper_path} of=$DST bs=$DD_BS" \
     #    "Error copying ${src_volume_mapper_path} to $DST"
 
@@ -148,6 +150,7 @@ vol://*)
     
     hostname=$(onehost list -l NAME,STAT | grep 'on$' | head -n 1 | awk '{print $1}')
     log "hostname: $hostname"
+    [ -n "$hostname" ] || exit 1
     src_volume_size=`fs_du $SRC $hostname`
     SIZE=${src_volume_size}
     log "size: $SIZE"
