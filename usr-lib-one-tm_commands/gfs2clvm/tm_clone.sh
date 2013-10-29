@@ -50,6 +50,7 @@ if [ -z $SIZE ] ; then
     hostname=$DST_HOST
     src_volume_size=$(set -x ; ssh $hostname sudo /sbin/lvs --noheadings --units m | grep $src_volume 2>/dev/null | ( read lv vg states size ; echo $size) )
     SIZE=${src_volume_size}
+    SIZE=${SIZE/M}
     SIZE=${SIZE/.00m}
     log "size: $SIZE"
 fi
@@ -74,7 +75,7 @@ case $SRC in
 #------------------------------------------------------------------------------
 http://*)
     log "Creating LV $LV_NAME"
-    exec_and_log "$SSH $DST_HOST $SUDO $LVCREATE -L$SIZE -n $LV_NAME $VG_NAME"
+    exec_and_log "$SSH $DST_HOST $SUDO $LVCREATE -L${SIZE}M -n $LV_NAME $VG_NAME"
     sleep 3
     exec_and_log "$SSH $DST_HOST ln -s /dev/$VG_NAME/$LV_NAME $DST_PATH"
 
@@ -87,7 +88,7 @@ http://*)
 #------------------------------------------------------------------------------
 *:/dev/*)
     log "Cloning LV $LV_NAME"
-    exec_and_log "$SSH $DST_HOST $SUDO $LVCREATE -s -L$SIZE -n $LV_NAME $SRC_PATH"
+    exec_and_log "$SSH $DST_HOST $SUDO $LVCREATE -s -L${SIZE}M -n $LV_NAME $SRC_PATH"
     sleep 3
     exec_and_log "$SSH $DST_HOST ln -s /dev/$VG_NAME/$LV_NAME $DST_PATH"
     exec_and_log "$SSH $DST_HOST chown oneadmin: $DST_PATH"

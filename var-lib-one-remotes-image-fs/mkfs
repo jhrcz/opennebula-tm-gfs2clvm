@@ -58,7 +58,7 @@ exec_and_log "ssh $hostname $MKFS_CMD" \
 # ---------------- Get the size of the image ------------
 #SIZE=`fs_du $DST`
 SIZE=$(ssh $hostname sudo /sbin/lvs --noheadings --units m | grep lv-oneimg-${DST_BASENAME} 2>/dev/null | ( read lv vg states size ; echo $size) )
+SIZE=${SIZE/M}
 SIZE=${SIZE/.00m}
 
-echo "$DST ${SIZE}M"
-#echo "$DST 163840"
+echo "$DST ${SIZE}"
